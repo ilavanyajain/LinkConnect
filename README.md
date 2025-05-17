@@ -1,6 +1,6 @@
 # LinkConnect
 
-**LinkConnect Pro** is a powerful tool for professionals who receive a high volume of LinkedIn connection requests. It allows you to efficiently filter, review, and analyze connection requests based on your own criteria, saving you time and helping you build a more relevant network.
+**LinkConnect** is a powerful tool for professionals who receive a high volume of LinkedIn connection requests. It allows you to efficiently filter, review, and analyze connection requests based on your own criteria, saving you time and helping you build a more relevant network.
 
 ---
 
