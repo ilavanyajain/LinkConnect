@@ -20,7 +20,7 @@ class LinkedInBot:
 
         profiles = []
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=False)
+            browser = p.chromium.launch(headless=True, args=['--no-sandbox'])
             context = browser.new_context()
             page = context.new_page()
             page.goto(LOGIN_URL)
@@ -92,10 +92,7 @@ class LinkedInBot:
         from playwright.sync_api import TimeoutError
 
         with sync_playwright() as p:
-            browser = p.chromium.launch(
-                headless=True,
-                args=['--disable-blink-features=AutomationControlled', '--no-sandbox']
-            )
+            browser = p.chromium.launch(headless=True, args=['--no-sandbox'])
             context = browser.new_context(
                 viewport={'width': 1920, 'height': 1080},
                 user_agent='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
