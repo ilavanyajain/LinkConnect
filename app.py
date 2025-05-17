@@ -1,8 +1,5 @@
-import subprocess
-try:
-    subprocess.run(["playwright", "install", "chromium"], check=True)
-except Exception as e:
-    print("Playwright browser install failed:", e)
+import os
+os.system("playwright install")
 
 import streamlit as st
 from linkedin_bot import LinkedInBot
