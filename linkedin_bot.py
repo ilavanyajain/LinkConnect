@@ -20,14 +20,21 @@ class LinkedInBot:
 
         profiles = []
         with sync_playwright() as p:
+            print("[DEBUG] Launching Chromium browser...")
             browser = p.chromium.launch(headless=True, args=['--no-sandbox'])
             context = browser.new_context()
             page = context.new_page()
+            print("[DEBUG] Navigating to LinkedIn login page...")
             page.goto(LOGIN_URL)
+            print("[DEBUG] Filling in email...")
             page.fill('input[name="session_key"]', self.email)
+            print("[DEBUG] Filling in password...")
             page.fill('input[name="session_password"]', self.password)
+            print("[DEBUG] Clicking login button...")
             page.click('button[type="submit"]')
+            print("[DEBUG] Waiting for search input (post-login)...")
             page.wait_for_selector('input[placeholder="Search"]', timeout=120000)
+            print("[DEBUG] Login successful, navigating to My Network...")
 
             while "feed" not in page.url:
                 print("Waiting for user to complete login/2FA...")
