@@ -34,4 +34,8 @@ libegl1
 libglx0
 libgudev-1.0-0
 libgles2
-libmanette-0.2-0 
+libmanette-0.2-0
+libxslt1.1
+libwoff1
+libevent-2.1-7
+gstreamer1.0-libav 
