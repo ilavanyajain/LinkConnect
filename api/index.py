@@ -4,6 +4,10 @@ import os
 import re
 import logging
 
+# Set the browser path for Playwright
+if os.environ.get("VERCEL"):
+    os.environ["PLAYWRIGHT_BROWSERS_PATH"] = "/var/task/browser"
+
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
