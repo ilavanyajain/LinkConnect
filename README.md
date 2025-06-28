@@ -1,99 +1,109 @@
-# LinkConnect
+# LinkConnect V2
 
-**LinkConnect** is a powerful tool for professionals who receive a high volume of LinkedIn connection requests. It allows you to efficiently filter, review, and analyze connection requests based on your own criteria, saving you time and helping you build a more relevant network.
+**LinkConnect** is a powerful tool for professionals to efficiently filter, review, and auto-accept LinkedIn connection requests based on custom criteria. This version is architected for serverless deployment on platforms like Vercel.
 
 ---
 
 ## Features
 
-- **Automated Login:** Securely log in to your LinkedIn account using your credentials.
-- **Fetch Pending Requests:** Retrieve all your pending LinkedIn connection requests in one click.
-- **Profile Filtering:** Filter requests by headline keywords and minimum number of mutual connections.
-- **Profile Data Table:** View all pending requests in a sortable, filterable table with names, profile URLs, headlines, and mutual connections.
-- **Robust Headline Extraction:** Extracts professional headlines from each profile for better filtering.
-- **Human-like Automation:** Uses Playwright with anti-bot measures for more reliable automation.
-- **Modern UI:** Built with Streamlit for a clean, interactive, and responsive user experience.
+- **Web-Based UI:** A clean and modern user interface built with standard HTML, CSS, and JavaScript.
+- **Serverless Backend:** Powered by Flask, designed to run as a serverless function for scalability and cost-efficiency.
+- **Efficient Automation:** Uses a refactored Playwright-based bot for faster and more reliable LinkedIn interactions.
+- **Direct Connection Acceptance:** Accepts requests directly from the network page, avoiding slow and risky profile visits.
+- **Dynamic Filtering:** Filter pending requests in real-time by headline keywords and the number of mutual connections.
+- **Secure:** Credentials are handled for each session and are not stored. For production, environment variables are recommended.
 
 ---
 
-## How It Works
+## Architecture
 
-1. **Login:** Enter your LinkedIn email and password (credentials are not stored).
-2. **Fetch Requests:** Click "Fetch Pending Requests" to retrieve all your pending connection requests.
-3. **Filter:** Use the filter options to narrow down requests by headline keywords and/or minimum mutual connections.
-4. **Review:** Browse the filtered list, including names, profile URLs, professional headlines, and mutual connections.
+LinkConnect now uses a modern web architecture:
 
----
+- **Frontend:** A static single-page application located in the `/public` directory. It is built with HTML, CSS, and vanilla JavaScript.
+- **Backend:** A Flask API located in the `/api` directory. It's designed to be deployed as a single serverless function (`index.py`) that controls the `LinkedInBot`.
+- **Bot:** The core automation logic is encapsulated in `linkedin_bot.py`, which is now more robust and efficient.
 
-## Tech Stack
-
-- **Python 3.8+**: The core programming language for the backend logic and automation.
-- **Streamlit**: Provides the interactive web-based user interface for the app, allowing users to input credentials, set filters, and view results in real time.
-- **Playwright**: Automates browser actions to log in to LinkedIn and fetch pending connection requests, simulating human-like behavior to avoid detection.
-- **Pandas**: Used for data manipulation and display, especially for filtering and presenting the connection requests in a table format.
+This architecture is optimized for deployment on **Vercel**.
 
 ---
 
-## Technical Functionality
-
-- The app launches a browser session using Playwright, navigates to LinkedIn, and logs in with the provided credentials.
-- It navigates to the LinkedIn invitation manager and scrapes all pending connection requests, extracting names, profile URLs, professional headlines, and mutual connections.
-- The data is loaded into a Pandas DataFrame for easy filtering and display.
-- Users can filter the requests by keywords in the headline and by the minimum number of mutual connections.
-- The filtered results are displayed in a table within the Streamlit UI, allowing users to review and analyze their pending requests efficiently.
-- **Note:** Due to LinkedIn's anti-automation measures and recent changes, the app does not support automated acceptance of connection requests. It is designed for review and analysis only.
-
----
-
-## Installation
+## Local Development
 
 ### Prerequisites
 
 - Python 3.8+
 - [Playwright](https://playwright.dev/python/docs/intro)
-- [Streamlit](https://streamlit.io/)
-- [Pandas](https://pandas.pydata.org/)
 
-### Install dependencies
+### 1. Install Dependencies
+
+First, install the required Python packages:
 
 ```bash
 pip install -r requirements.txt
-playwright install
 ```
 
-### `requirements.txt`
+Then, install the necessary Playwright browser:
+
+```bash
+playwright install chromium
+```
+
+### 2. Set Up Environment Variables (Optional)
+
+For convenience, you can create a `.env` file in the root of the project to store your LinkedIn credentials. This prevents you from having to type them into the UI every time.
 
 ```
-streamlit
-playwright
-pandas
+LINKEDIN_EMAIL="your-email@example.com"
+LINKEDIN_PASSWORD="your-password"
 ```
+
+The application will automatically use these if the fields in the UI are left blank.
+
+### 3. Run the Flask App
+
+Start the local Flask development server:
+
+```bash
+flask run --port 5001
+```
+
+Or, more directly:
+
+```bash
+python3 api/index.py
+```
+
+*Note: Running `api/index.py` directly is often easier for local testing.*
+
+### 4. Run a Local Server for the Frontend
+
+Since the frontend and backend run on different ports locally, you need a simple HTTP server for the frontend.
+
+Open a **new terminal window**, navigate to the `public` directory, and run:
+
+```bash
+cd public
+python3 -m http.server 5000
+```
+
+### 5. Access the Application
+
+Open your browser and go to **http://localhost:5000**. The frontend will make API calls to the Flask server running on port 5001.
 
 ---
 
-## Usage
+## Deployment to Vercel
 
-1. **Start the app:**
+This project is configured for seamless deployment to Vercel.
 
-   ```bash
-   streamlit run app.py
-   ```
-
-2. **Open your browser:**  
-   Go to the local URL provided by Streamlit (usually http://localhost:8501).
-
-3. **Login and use the app:**  
-   - Enter your LinkedIn credentials.
-   - Fetch pending requests.
-   - Filter and review.
-
----
-
-## Security & Privacy
-
-- **Credentials:** Your LinkedIn credentials are used only for the session and are not stored.
-- **Automation:** The app uses Playwright to automate browser actions. It does not store or transmit your data anywhere.
-- **Disclaimer:** Use this tool responsibly and in accordance with LinkedIn's terms of service. Excessive automation may result in account restrictions.
+1.  **Sign up** for a free account at [Vercel](https://vercel.com).
+2.  **Install** the Vercel CLI: `npm install -g vercel`.
+3.  **Run** the deployment command from the project root:
+    ```bash
+    vercel
+    ```
+4.  Follow the on-screen prompts. Vercel will automatically detect the `vercel.json` configuration and deploy the application.
+5.  **Set Environment Variables:** In your Vercel project settings, add your `LINKEDIN_EMAIL` and `LINKEDIN_PASSWORD` as environment variables for production use. This is more secure than hardcoding them.
 
 ---
 
@@ -101,10 +111,15 @@ pandas
 
 ```
 .
-├── app.py                  # Streamlit app UI and logic
-├── linkedin_bot.py         # Playwright automation for LinkedIn
-├── filters.py              # Filtering logic (if separated)
+├── api/
+│   └── index.py            # Flask backend (Serverless Function)
+├── public/
+│   ├── index.html          # Frontend HTML
+│   ├── style.css           # Frontend CSS
+│   └── main.js             # Frontend JavaScript
+├── linkedin_bot.py         # Core Playwright automation logic
 ├── requirements.txt        # Python dependencies
+├── vercel.json             # Vercel deployment configuration
 └── README.md               # This file
 ```
 

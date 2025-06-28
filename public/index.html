@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkConnect - Connection Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>LinkConnect</h1>
+            <p>Automate Your LinkedIn Connection Requests</p>
+        </header>
+
+        <main>
+            <div class="auth-section card">
+                <h2>1. Authentication</h2>
+                <input type="email" id="email" placeholder="LinkedIn Email" required>
+                <input type="password" id="password" placeholder="LinkedIn Password" required>
+            </div>
+
+            <div class="actions-section card">
+                <h2>2. Fetch & Filter</h2>
+                <button id="fetch-btn">Fetch Pending Requests</button>
+                <div class="filter-controls">
+                    <input type="text" id="headline-keywords" placeholder="Headline keywords (comma-separated)">
+                    <input type="number" id="min-mutual" placeholder="Min mutual connections" min="0" value="0">
+                </div>
+            </div>
+
+            <div class="results-section card">
+                <h2>3. Review & Accept</h2>
+                <div id="status"></div>
+                <div id="profiles-table-container"></div>
+                <button id="accept-btn" style="display: none;">Accept Filtered Connections</button>
+            </div>
+        </main>
+
+        <footer>
+            <p>Disclaimer: This tool is not affiliated with LinkedIn. Use responsibly.</p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html> 

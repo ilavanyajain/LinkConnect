@@ -1,4 +1,5 @@
-streamlit
-playwright
-pandas
-pytest-playwright
+Flask==3.0.3
+playwright==1.44.0
+pandas==2.2.2
+python-dotenv==1.0.1
+requests==2.32.3
