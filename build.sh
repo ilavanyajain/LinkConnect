@@ -3,7 +3,9 @@
 # This script is run by Vercel during the build process.
 
 # Exit immediately if a command exits with a non-zero status.
-set -e
+set -ex
+
+echo "=== RUNNING BUILDSH ==="
 
 # 1. Create the directory structure Vercel expects
 mkdir -p .vercel/output/functions/api/
@@ -33,18 +35,18 @@ cat > .vercel/output/functions/api/.vc-config.json <<EOF
 EOF
 
 # 6. Set the Playwright browser cache path to a location outside the function bundle
-export PLAYWRIGHT_BROWSERS_PATH="/tmp/pw-browsers"
+export PLAYWRIGHT_BROWSERS_PATH="/tmp/pw-browser-cache"
 
-# 7. Install the single Chromium browser
-echo "Installing Playwright browser..."
-playwright install --with-deps chromium
+# 7. Install Playwright browser
+pip install playwright-core
+playwright install chromium
 
-# 8. Move browser files to a location that's accessible at runtime
-echo "Moving browser files..."
-mkdir -p .vercel/output/_browser
-mv $PLAYWRIGHT_BROWSERS_PATH/* .vercel/output/_browser/
+# 8. Move browser binaries to output directory
+mkdir -p .vercel/output/_browser/
+cp -r $PLAYWRIGHT_BROWSERS_PATH/* .vercel/output/_browser/ || true
 
 # 9. Create the required config.json for Vercel Output File System
+echo "=== ABOUT TO WRITE CONFIG.JSON ==="
 cat > .vercel/output/config.json <<EOF
 {
   "version": 3,
@@ -54,5 +56,9 @@ cat > .vercel/output/config.json <<EOF
   ]
 }
 EOF
+
+echo "=== CONFIG.JSON CONTENTS ==="
+ls -l .vercel/output/
+cat .vercel/output/config.json
 
 echo "Build script finished successfully." 
