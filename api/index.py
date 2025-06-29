@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from linkedin_bot import LinkedInBot
 import re
 import logging
@@ -92,6 +92,15 @@ def handle_linkedin_action():
         
     finally:
         bot.close_browser()
+
+# Serve static files from the public directory
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_frontend(path):
+    if path != "" and os.path.exists(os.path.join('public', path)):
+        return send_from_directory('public', path)
+    else:
+        return send_from_directory('public', 'index.html')
 
 # This is for local development, Vercel will use its own server
 if __name__ == "__main__":
