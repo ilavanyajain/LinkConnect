@@ -22,17 +22,37 @@ echo "Copying backend code..."
 cp api/index.py .vercel/output/functions/api/
 cp linkedin_bot.py .vercel/output/functions/api/
 
-# 5. Set the Playwright browser cache path to a location outside the function bundle
+# 5. Create the function's specific config file
+echo "Creating function config..."
+cat > .vercel/output/functions/api/.vc-config.json <<EOF
+{
+  "runtime": "python3.12",
+  "handler": "index.app",
+  "launcherType": "FastApi"
+}
+EOF
+
+# 6. Set the Playwright browser cache path to a location outside the function bundle
 export PLAYWRIGHT_BROWSERS_PATH="/tmp/pw-browsers"
 
-# 6. Install the single Chromium browser
+# 7. Install the single Chromium browser
 echo "Installing Playwright browser..."
 playwright install --with-deps chromium
 
-# 7. Copy the browser installation from the temp path to a new location inside the build output
-# This makes it available at runtime without being part of the function bundle.
+# 8. Move browser files to a location that's accessible at runtime
 echo "Moving browser files..."
-mkdir -p .vercel/output/browser
-mv $PLAYWRIGHT_BROWSERS_PATH/* .vercel/output/browser/
+mkdir -p .vercel/output/_browser
+mv $PLAYWRIGHT_BROWSERS_PATH/* .vercel/output/_browser/
+
+# 9. Create the required config.json for Vercel Output File System
+cat > .vercel/output/config.json <<EOF
+{
+  "version": 3,
+  "routes": [
+    { "src": "/api/.*", "dest": "/functions/api/index.py" },
+    { "src": "/(.*)", "dest": "/static/$1" }
+  ]
+}
+EOF
 
 echo "Build script finished successfully." 
