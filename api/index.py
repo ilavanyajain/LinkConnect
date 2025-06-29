@@ -13,7 +13,7 @@ if os.environ.get("VERCEL"):
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../public', static_url_path='')
 
 def safe_mutual_count(mc_string):
     """Safely extracts the number of mutual connections from a string."""
@@ -94,15 +94,15 @@ def handle_linkedin_action():
         bot.close_browser()
 
 @app.route('/')
-def root():
-    return send_from_directory('public', 'index.html')
+def serve_index():
+    return send_from_directory(app.static_folder, 'index.html')
 
-@app.route('/<path:filename>')
-def static_files(filename):
-    if os.path.exists(os.path.join('public', filename)):
-        return send_from_directory('public', filename)
+@app.route('/<path:path>')
+def serve_static(path):
+    if os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
     else:
-        return send_from_directory('public', 'index.html')
+        return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/debug-list-public')
 def debug_list_public():
