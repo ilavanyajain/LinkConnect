@@ -111,6 +111,15 @@ def debug_list_public():
     except Exception as e:
         return f"Error: {e}"
 
+@app.route('/debug-docker-paths')
+def debug_docker_paths():
+    try:
+        root_files = os.listdir('/app')
+        public_files = os.listdir('/app/public') if os.path.exists('/app/public') else 'NO PUBLIC DIR'
+        return f"WORKDIR: {os.getcwd()}<br>/app: {root_files}<br>/app/public: {public_files}"
+    except Exception as e:
+        return f"Error: {e}"
+
 # This is for local development, Vercel will use its own server
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
