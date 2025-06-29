@@ -93,12 +93,14 @@ def handle_linkedin_action():
     finally:
         bot.close_browser()
 
-# Serve static files from the public directory
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve_frontend(path):
-    if path != "" and os.path.exists(os.path.join('public', path)):
-        return send_from_directory('public', path)
+@app.route('/')
+def root():
+    return send_from_directory('public', 'index.html')
+
+@app.route('/<path:filename>')
+def static_files(filename):
+    if os.path.exists(os.path.join('public', filename)):
+        return send_from_directory('public', filename)
     else:
         return send_from_directory('public', 'index.html')
 
