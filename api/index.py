@@ -104,6 +104,13 @@ def static_files(filename):
     else:
         return send_from_directory('public', 'index.html')
 
+@app.route('/debug-list-public')
+def debug_list_public():
+    try:
+        return str(os.listdir(os.path.join(os.getcwd(), 'public')))
+    except Exception as e:
+        return f"Error: {e}"
+
 # This is for local development, Vercel will use its own server
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
