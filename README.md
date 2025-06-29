@@ -1,6 +1,6 @@
-# LinkConnect V2
+# LinkConnect (Render Edition)
 
-**LinkConnect** is a powerful tool for professionals to efficiently filter, review, and auto-accept LinkedIn connection requests based on custom criteria. This version is architected for serverless deployment on platforms like Vercel.
+**LinkConnect** is a tool to automate and filter LinkedIn connection requests using Playwright and Flask. This version is designed for deployment on [Render](https://render.com/).
 
 ---
 
@@ -12,6 +12,7 @@
 - **Direct Connection Acceptance:** Accepts requests directly from the network page, avoiding slow and risky profile visits.
 - **Dynamic Filtering:** Filter pending requests in real-time by headline keywords and the number of mutual connections.
 - **Secure:** Credentials are handled for each session and are not stored. For production, environment variables are recommended.
+- **Deployable on Render (persistent, no serverless limits):**
 
 ---
 
@@ -23,7 +24,7 @@ LinkConnect now uses a modern web architecture:
 - **Backend:** A Flask API located in the `/api` directory. It's designed to be deployed as a single serverless function (`index.py`) that controls the `LinkedInBot`.
 - **Bot:** The core automation logic is encapsulated in `linkedin_bot.py`, which is now more robust and efficient.
 
-This architecture is optimized for deployment on **Vercel**.
+This architecture is optimized for deployment on **Render**.
 
 ---
 
@@ -92,18 +93,15 @@ Open your browser and go to **http://localhost:5000**. The frontend will make AP
 
 ---
 
-## Deployment to Vercel
+## Deploying to Render
 
-This project is configured for seamless deployment to Vercel.
-
-1.  **Sign up** for a free account at [Vercel](https://vercel.com).
-2.  **Install** the Vercel CLI: `npm install -g vercel`.
-3.  **Run** the deployment command from the project root:
-    ```bash
-    vercel
-    ```
-4.  Follow the on-screen prompts. Vercel will automatically detect the `vercel.json` configuration and deploy the application.
-5.  **Set Environment Variables:** In your Vercel project settings, add your `LINKEDIN_EMAIL` and `LINKEDIN_PASSWORD` as environment variables for production use. This is more secure than hardcoding them.
+1. **Push your code to GitHub.**
+2. **Create a new Web Service on Render:**
+   - Environment: Python 3
+   - Build Command: `pip install -r requirements.txt && playwright install chromium`
+   - Start Command: `python api/index.py`
+   - (Optional) Set environment variables for secrets.
+3. **Set the service to listen on port 10000 or `$PORT` (Render sets this automatically).**
 
 ---
 
@@ -164,3 +162,10 @@ This tool is not affiliated with or endorsed by LinkedIn. Use responsibly and at
 
 Developed by Lavanya J.  
 For questions or support, open an issue or contact me. 
+
+---
+
+## Notes
+- Remove all Vercel-specific files/configs before deploying to Render.
+- Playwright will download the browser on first build (see build command above).
+- For persistent storage, use Render's disk or environment variables as needed.

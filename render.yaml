@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: linkconnect
+    env: python
+    buildCommand: "pip install -r requirements.txt && playwright install chromium"
+    startCommand: "python api/index.py"
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12
+    autoDeploy: true 

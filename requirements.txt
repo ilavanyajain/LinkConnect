@@ -1,5 +1,5 @@
 Flask==3.0.3
-playwright-core==1.44.0
+playwright==1.44.0
 pandas==2.2.2
 python-dotenv==1.0.1
 requests==2.32.3
